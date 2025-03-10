@@ -6,7 +6,7 @@ from spockbot.mcdata import constants, windows
 from spockbot.mcdata.windows import make_slot_check
 from spockbot.plugins.base import PluginBase, pl_announce
 from spockbot.plugins.tools.event import EVENT_UNREGISTER
-from spockbot.plugins.tools.inventory_async import InventoryAsync
+from spockbot.plugins.tools.inventory_deferred import InventoryDeferred
 
 
 class InventoryCore(object):
@@ -19,7 +19,7 @@ class InventoryCore(object):
         # the slot that moves with the mouse when clicking a slot
         self.cursor_slot = windows.SlotCursor()
         self.window = windows.PlayerWindow()
-        self.async = InventoryAsync(self)
+        self.deferred = InventoryDeferred(self)
 
     def total_stored(self, wanted, slots=None):
         """
@@ -100,7 +100,7 @@ class InventoryCore(object):
         Drop one or all items of the slot.
 
         Does not wait for confirmation from the server. If you want that,
-        use a ``Task`` and ``yield inventory.async.drop_slot()`` instead.
+        use a ``Task`` and ``yield inventory.deferred.drop_slot()`` instead.
 
         If ``slot`` is None, drops the ``cursor_slot`` or, if that's empty,
         the currently held item (``active_slot``).

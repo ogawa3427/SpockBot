@@ -1,5 +1,5 @@
 """
-Asynchronous task wrappers for inventory
+Deferred task wrappers for inventory
 """
 from spockbot.mcdata import constants
 from spockbot.plugins.tools.task import TaskFailed, check_key
@@ -12,7 +12,7 @@ def unpack_slots_list(slots):
     return slots[0]
 
 
-class InventoryAsync(object):
+class InventoryDeferred(object):
     def __init__(self, inventory):
         self.inventory = inventory
 

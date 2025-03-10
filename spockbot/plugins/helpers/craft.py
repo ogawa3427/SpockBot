@@ -84,12 +84,12 @@ class CraftPlugin(PluginBase):
                         if not ingr_slot:  # should not occur, as we checked
                             raise TaskFailed('Craft: No %s:%s found'
                                              ' in inventory' % ingredient)
-                        yield inv.async.click_slot(ingr_slot)
+                        yield inv.deferred.click_slot(ingr_slot)
                     # TODO speed up mass crafting with left+right clicking
-                    yield inv.async.click_slot(slot, right=True)
+                    yield inv.deferred.click_slot(slot, right=True)
             # done putting in that item, put away
             if not inv.cursor_slot.is_empty:
-                yield inv.async.store_or_drop()
+                yield inv.deferred.store_or_drop()
 
         # TODO check if all items are in place
         # otherwise we will get the wrong crafting result
@@ -98,19 +98,19 @@ class CraftPlugin(PluginBase):
         prev_cursor_amt = inv.cursor_slot.amount
         crafted_amt = 0
         while amount > crafted_amt + inv.cursor_slot.amount:
-            yield inv.async.click_slot(result_slot)
+            yield inv.deferred.click_slot(result_slot)
             # TODO check that cursor is non-empty, otherwise we did not craft
             result_stack_size = inv.cursor_slot.item.stack_size
             if inv.cursor_slot.amount in (prev_cursor_amt, result_stack_size):
                 # cursor full, put away
                 crafted_amt += inv.cursor_slot.amount
-                yield inv.async.store_or_drop()
+                yield inv.deferred.store_or_drop()
             prev_cursor_amt = inv.cursor_slot.amount
         if not inv.cursor_slot.is_empty:
             # cursor still has items left from crafting, put away
-            yield inv.async.store_or_drop()
+            yield inv.deferred.store_or_drop()
 
         # put ingredients left from crafting back into inventory
-        yield inv.async.move_to_inventory(grid_slots)
+        yield inv.deferred.move_to_inventory(grid_slots)
 
         # TODO return anything? maybe the slots with the crafting results?
